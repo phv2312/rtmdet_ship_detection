@@ -1,6 +1,5 @@
 <h1>Ship Detection</h1>
 
----
 ## Installation
 
 ```bash
@@ -19,3 +18,17 @@ git checkout "d50ab76"
 pip install -v -e .
 ```
 
+## Sample usage
+
+### Training
+
+```bash
+conda activate mmd
+python train.py
+```
+
+### Inference
+```bash
+conda activate mmd
+python infer.py
+```
