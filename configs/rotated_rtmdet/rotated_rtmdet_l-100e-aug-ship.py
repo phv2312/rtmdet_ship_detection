@@ -140,10 +140,10 @@ train_pipeline_stage2 = [
 train_dataloader = dict(
     batch_size=4, num_workers=4, dataset=dict(pipeline=train_pipeline))
 
-max_epochs = 100
+max_epochs = 20
 stage2_num_epochs = 10
 base_lr = 0.004 / 16
-interval = 20
+interval = 2
 
 train_cfg = dict(max_epochs=max_epochs, val_interval=interval)
 

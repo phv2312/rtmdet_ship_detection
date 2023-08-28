@@ -39,6 +39,8 @@ def main():
 
     # => training experiments
     config.work_dir = working_dir
+    config.gpu_devices = [0]
+
     print(f"Modified config")
     print(config)
 
