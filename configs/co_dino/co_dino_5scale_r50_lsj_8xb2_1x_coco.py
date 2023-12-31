@@ -287,21 +287,35 @@ model = dict(
 # LSJ + CopyPaste
 load_pipeline = [
     dict(type='LoadImageFromFile'),
-    dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+    dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
+    dict(type='mmdet.CachedMosaic', img_scale=(1024, 1024), pad_val=114.0),
     dict(
-        type='RandomResize',
-        scale=image_size,
+        type='mmdet.RandomResize',
+        resize_type='mmdet.Resize',
+        scale=(2048, 2048),
         ratio_range=(0.1, 2.0),
         keep_ratio=True),
     dict(
-        type='RandomCrop',
-        crop_type='absolute_range',
-        crop_size=image_size,
-        recompute_bbox=True,
-        allow_negative_crop=True),
-    dict(type='FilterAnnotations', min_gt_bbox_wh=(1e-2, 1e-2)),
-    dict(type='RandomFlip', prob=0.5),
-    dict(type='Pad', size=image_size, pad_val=dict(img=(114, 114, 114))),
+        type='RandomRotate',
+        prob=0.5,
+        angle_range=180,
+        rect_obj_labels=[9, 11]),
+    dict(type='mmdet.RandomCrop', crop_size=(1024, 1024)),
+    dict(type='mmdet.YOLOXHSVRandomAug'),
+    dict(
+        type='mmdet.RandomFlip',
+        prob=0.75,
+        direction=['horizontal', 'vertical', 'diagonal']),
+    dict(
+        type='mmdet.Pad', size=(1024, 1024),
+        pad_val=dict(img=(114, 114, 114))),
+    dict(
+        type='mmdet.CachedMixUp',
+        img_scale=(1024, 1024),
+        ratio_range=(1.0, 1.0),
+        max_cached_images=10,
+        pad_val=(114, 114, 114)),
+    dict(type='mmdet.PackDetInputs')
 ]
 
 train_pipeline = [
@@ -342,7 +356,7 @@ optim_wrapper = dict(
     _delete_=True,
     type='OptimWrapper',
     optimizer=dict(type='AdamW', lr=2e-4, weight_decay=0.0001),
-    clip_grad=dict(max_norm=0.1, norm_type=2),
+    clip_grad=dict(max_norm=1., norm_type=2),
     paramwise_cfg=dict(custom_keys={'backbone': dict(lr_mult=0.1)}))
 
 val_evaluator = dict(metric='bbox', ann_file="data/balloon/val/annotation_coco.json")
