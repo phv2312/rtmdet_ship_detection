@@ -18,6 +18,18 @@ git checkout "d50ab76"
 pip install -v -e .
 ```
 
+Or 
+
+```
+conda create --name rtmdet python=3.8 -y
+conda activate rtmdet
+conda install pytorch==1.12.1 torchvision cudatoolkit -c pytorch
+pip install openmim==0.3.9
+mim install mmcv-full==1.7.2
+mim install mmdet==2.28.2
+pip install "mmrotate @ git+ssh://git@github.com/open-mmlab/mmrotate.git@v1.0.0rc1"
+```
+
 ## Sample usage
 
 ### Training
